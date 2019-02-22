@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.schema();
+const Schema = mongoose.Schema;
 
 // Create Schema
-const UserSchema = new schema({
+const UserSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -16,8 +16,7 @@ const UserSchema = new schema({
     required: true
   },
   avatar: {
-    type: String,
-    required: true
+    type: String
   },
   date: {
     type: Date,
