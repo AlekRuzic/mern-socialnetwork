@@ -8,6 +8,8 @@ const passport = require('passport');
 const Profile = require('../../models/Profile');
 // Load User profile
 const User = require('../../models/User');
+// Load validation
+const validateProfileInput = require('../../validation/profile');
 
 
 // @route   GET api/profile/test
@@ -23,6 +25,7 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
   const errors = {};
 
   Profile.findOne({ user: req.user.id }) // Find profile based on logged in user's ID
+    .populate('user', ['name', 'avatar']) // Get name and avatar from User collection (related to Profile)
     .then(profile => {
       if (!profile) {
         errors.noprofile = 'There is no profile for this user'
@@ -40,6 +43,13 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
 router.post( '/',
   passport.authenticate('jwt', {session: false}),
   (req, res) => {
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    // Check validation
+    if(!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
 
     // Get fields
     const profileFields = {};
@@ -73,7 +83,7 @@ router.post( '/',
           // Find the user with the current loggin in user's ID
           { user: req.user.id },
           // Update the profile fields object
-          { $set: ProfileFields },
+          { $set: profileFields },
           // Specifies that the updated version of the object gets returned
           { new: true })
           .then(profile => res.json(profile));
