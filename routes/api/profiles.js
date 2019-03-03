@@ -37,6 +37,26 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
 })
 
 
+// @route   GET api/profile/all
+// @desc    Get all profiles
+// @access  Public
+router.get('/all', (req, res) => {
+  const errors = {};
+
+  Profile.find()
+    .populate('user', ['name', 'avatar'])
+    .then(profiles => {
+      if(!profiles) {
+        errors.noprofiles = 'There are no profiles';
+        return res.status(404).json(errors);
+      }
+
+      res.json(profiles);
+    })
+    .catch(err => res.status(404).json({ error: 'There are no profiles'}));
+})
+
+
 // @route   GET api/profile/handle/:handle
 // @desc    Get profile by handle
 // @access  Public
