@@ -65,13 +65,61 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
       Post.findById(req.params.id)
         .then(post => {
           // Check that the post belongs to the logged in user
+          // You need to change the reference ID to a string because it is of type ObjectID
           if (post.user.toString() !== req.user.id) {
             return (res.status(401).json({ notauthorized: 'User not authorized to delete this post '}));
           }
 
           post.remove().then(_ => res.json({ success: true }));
         })
-        .catch(err => res.status(404).json({ postnotfound: 'The post you are trying to delete could not be found'}))
+        .catch(err => res.status(404).json({ postnotfound: 'Post not be found'}))
+    })
+})
+
+
+// @route   POST api/posts/like/:id
+// @desc    Like a post
+// @access  Private
+router.post('/like/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      Post.findById(req.params.id)
+        .then(post => {
+          // Check if the current user has already liked the post
+          if(post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+            return res.status(400).json({ alreadyliked: 'User already liked this post'})
+          }
+          // Add user id to likes
+          post.likes.unshift({ user: req.user.id })
+          // Update database
+          post.save().then(post => res.json(post));
+        })
+        .catch(err => res.status(404).json({ postnotfound: 'Post not found' }))
+    })
+})
+
+
+// @route   POST api/posts/unlike/:id
+// @desc    Unlike a post
+// @access  Private
+router.post('/unlike/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      Post.findById(req.params.id)
+        .then(post => {
+          // Check if the current user has already liked the post
+          if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
+            return res.status(400).json({ havenotliked: 'User has not liked this post' })
+          }
+
+          // Get the remove index
+          const removeIndex = post.likes.map(item => item.user.toString()).indexOf(req.user.id);
+          // Splice remove index out of array
+          post.likes.splice(removeIndex, 1)
+          // Update the database
+          post.save().then(post => res.json(post));
+        })
+        .catch(err => res.status(404).json({ postnotfound: 'Post not found' }))
     })
 })
 
