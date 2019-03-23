@@ -4,13 +4,13 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 
 class Landing extends Component {
-  
+
   componentDidMount() {
     if(this.props.auth.isAuthenticated) {
       this.props.history.push('/dashboard');
     }
   }
-  
+
   render() {
     return (
       <div className="landing">
