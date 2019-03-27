@@ -36,7 +36,7 @@ class CreateProfile extends Component {
   componentWillReceiveProps(nextProps) {
     // Listen for errors on submission
     if(nextProps.errors) {
-      this.setState({ errors: nextProps.errors})
+      this.setState({ errors: nextProps.errors});
     }
   }
 
@@ -65,7 +65,7 @@ class CreateProfile extends Component {
   }
 
   onChange(e) {
-    this.setState({[e.target.name]: e.target.value})
+    this.setState({ [e.target.name]: e.target.value});
   }
 
   render() {
@@ -78,42 +78,42 @@ class CreateProfile extends Component {
       <div>
         <InputGroup
           placeholder="Twitter Profile URL"
-          name="Twitter"
+          name="twitter"
           icon="fab fa-twitter"
           value={this.state.twitter}
-          onchange={this.onChange}
+          onChange={this.onChange}
           error={errors.twitter}
         />
         <InputGroup
           placeholder="Facebook Profile URL"
-          name="Facebook"
+          name="facebook"
           icon="fab fa-facebook"
           value={this.state.facebook}
-          onchange={this.onChange}
+          onChange={this.onChange}
           error={errors.facebook}
         />
         <InputGroup
           placeholder="Instagram Profile URL"
-          name="Instagram"
+          name="instagram"
           icon="fab fa-instagram"
           value={this.state.instagram}
-          onchange={this.onChange}
+          onChange={this.onChange}
           error={errors.instagram}
         />
         <InputGroup
           placeholder="Youtube Profile URL"
-          name="Youtube"
+          name="youtube"
           icon="fab fa-youtube"
           value={this.state.youtube}
-          onchange={this.onChange}
+          onChange={this.onChange}
           error={errors.youtube}
         />
         <InputGroup
           placeholder="LinkedIn Profile URL"
-          name="LinkedIn"
+          name="linkedIn"
           icon="fab fa-linkedin"
           value={this.state.linkedin}
-          onchange={this.onChange}
+          onChange={this.onChange}
           error={errors.linkedin}
         />
         </div>
@@ -231,6 +231,7 @@ class CreateProfile extends Component {
                 {/* Social Media */}
                 <div className="mb-3">
                   <button
+                  type="button"
                   onClick={() => {
                     this.setState(prevState => ({
                       displaySocialInputs: !prevState.displaySocialInputs
@@ -242,6 +243,7 @@ class CreateProfile extends Component {
                   <span className="text-muted">Optional</span>
                 </div>
                 {socialInputs}
+
                 <input type="submit" value="Submit" className="btn btn-info btn-block mt-4" />
               </form>
             </div>
@@ -262,4 +264,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, createProfile)(withRouter(CreateProfile));
+export default connect(mapStateToProps, { createProfile })(withRouter(CreateProfile));
