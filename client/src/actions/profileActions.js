@@ -6,7 +6,7 @@ import { GET_PROFILE, PROFILE_LOADING, CLEAR_CURRENT_PROFILE, SET_CURRENT_USER }
 // Get current profile
 export const getCurrentProfile = () => dispatch => {
   dispatch(setProfileLoading())
-  axios.get('/api/profile')
+  axios.get('http://localhost:5000/api/profile')
     .then(res => {
       dispatch({
         type: GET_PROFILE,
